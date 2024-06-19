@@ -233,7 +233,8 @@ AGAIN, ONLY OUTPUT IN THE FOLLOWING FORMAT:
 	"topic": "Cereal for dinner",
 	"sentiment": "-1.0"
 }}"
-
+ '''
+    
     response = ollama.chat(model='llama3', messages=[
     {
         'role': 'user',
