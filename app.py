@@ -70,8 +70,7 @@ def add_articles_to_db(cursor, con, articles):
         # check if article already in db
         res = cursor.execute("SELECT title FROM articles WHERE title=?", [title]) # must be here or treats string like a list
         test = res.fetchone()
-        print(test)
-        if test is None:
+        if test is not None:
             continue
 
         if not determine_if_article_relevant(article):
@@ -156,23 +155,31 @@ def process_valid_articles(cursor, con):
     result = cursor.execute(sql)
     article = result.fetchone()
     while article is not None:
-        response = sentiment_analysis(article[1], ts)
-        updateTS = f"{datetime.datetime.now()}"
-        data2 = (updateTS, response[0], response[1], response[1])
-        cursor.execute(sql2, data2)
+        try:
+            response = sentiment_analysis(article[1])
+        except: # skips the article
+            data3 = article[0]
+            cursor.execute(sql3, [data3]) # good ol cant give it a string
 
-        data3 = article[0]
-        cursor.execute(sql3, [data3]) # good ol cant give it a string
+            result = cursor.execute(sql)
+            article = result.fetchone()
+        else:            
+            updateTS = f"{datetime.datetime.now()}"
+            data2 = (updateTS, response[0], response[1], response[1])
+            cursor.execute(sql2, data2)
 
-        result = cursor.execute(sql)
-        article = result.fetchone()
+            data3 = article[0]
+            cursor.execute(sql3, [data3]) # good ol cant give it a string
+
+            result = cursor.execute(sql)
+            article = result.fetchone()
 
         con.commit()
 
 
 
 
-def sentiment_analysis(content, timestamp):
+def sentiment_analysis(content):
     prompt = f'''
 
 You are an expert an analyzing articles and giving them a sentiment score from -1 to 1.
@@ -287,8 +294,8 @@ def main():
     cur = con.cursor()
     validate_or_create_tables(cur)
 
-    # TODO articles = gnews_api_call(apikey=os.getenv("GNEWS_API_KEY"), countries=['us', 'ca'], pages=5)
-    # TODO:add_articles_to_db(cur, con, articles)
+    articles = gnews_api_call(apikey=os.getenv("GNEWS_API_KEY"), countries=['us', 'ca'], pages=5)
+    add_articles_to_db(cur, con, articles)
     process_valid_articles(cur, con)
     print("done")
 
