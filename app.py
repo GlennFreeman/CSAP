@@ -162,7 +162,7 @@ SET processed = 1
 WHERE title = ?
 """
         data3 = article[0]
-        cursor.execute(sql3, data3)
+        cursor.execute(sql3, [data3]) # good ol cant give it a string
         con.commit()
 
 
