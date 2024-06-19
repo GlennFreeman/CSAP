@@ -183,7 +183,7 @@ or
 or
 
 "{{
-	"topic": "Soth American Seafood trends",
+	"topic": "South American Seafood trends",
 	"sentiment": "0.9"
 }}"
 
