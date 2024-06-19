@@ -1,15 +1,15 @@
 library("shiny")
 library("shinydashboard")
 
-header = dashboardHeader(
+header <- dashboardHeader(
     title = "Dynamic UI Example"
 )
-sidebar = dashboardSidebar(
+sidebar <- dashboardSidebar(
     sidebarMenu(
         menuItemOutput("dynamic_sidebar")
     )
 )
-body = dashboardBody(
+body <- dashboardBody(
     tabBox(
         tabPanel(
             strong("One")
@@ -19,36 +19,35 @@ body = dashboardBody(
         )
     )
 )
-ui = dashboardPage(header, sidebar, body)
+ui <- dashboardPage(header, sidebar, body)
 
-server = shinyServer(function(input,output,session){
-
+server <- shinyServer(function(input, output, session) {
     output$input <- renderUI({})
     outputOptions(output, "input", suspendWhenHidden = FALSE)
 
-output$dynamic_sidebar = renderMenu({
+    output$dynamic_sidebar <- renderMenu({
         sidebarMenu(
             menuItem(
                 "Slider or numeric problem",
                 radioButtons("slider_or_numeric",
-                   label = "Slider or Numeric Input",
-                   choices = c("Slider", "Numeric"),
-                   selected = "Slider",
-                   inline = TRUE
+                    label = "Slider or Numeric Input",
+                    choices = c("Slider", "Numeric"),
+                    selected = "Slider",
+                    inline = TRUE
                 ),
                 uiOutput("input")
-            )     
+            )
         )
     })
-    output$input = renderUI({
-        if (input$slider_or_numeric == "Slider"){
-            sliderInput("slider", 
+    output$input <- renderUI({
+        if (input$slider_or_numeric == "Slider") {
+            sliderInput("slider",
                 label = "slider",
                 min = 0, max = 1,
                 value = 0
             )
         } else {
-            numericInput("numeric", 
+            numericInput("numeric",
                 label = "numeric",
                 min = 0, max = 1,
                 value = 0
