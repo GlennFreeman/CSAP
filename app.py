@@ -142,10 +142,10 @@ def process_valid_articles(cursor):
     result = cursor.execute(sql)
     article = result.fetchone()
     while article is not None:
-        ...
+        sentiment_analysis(article)
         
 def sentiment_analysis(content):
-    prompt = f"""
+    prompt = f'''
 I will feed you an article:
 
 {content}
@@ -157,52 +157,52 @@ Provide the topic and give a sentiment analysis value, Here are some examples:
 
 Now output the analysis to a JSON format as the following example, ONLY output your response in the following form:
 
-"{
+"{{
 	"topic": "Mushrooms as meat",
 	"sentiment": "0.33
-}"
+}}"
 
 or
 
-"{
+"{{
 	"topic": "Processed foods",
 	"sentiment": "-0.7"
-}"
+}}"
 
 or
 
-"{
+"{{
 	"topic": "Peruvian food",
 	"sentiment": "0.4"
-}"
+}}"
 
 or
 
-"{
+"{{
 	"topic": "McDonalds health",
 	"sentiment": "-0.4"
-}"
+}}"
 
 or
 
-"{
+"{{
 	"topic": "Soth American Seafood trends",
 	"sentiment": "0.9"
-}"
+}}"
 
 or
 
-"{
+"{{
 	"topic": "Curry Powder in TikTok Cooking",
 	"sentiment": "0.6"
-}"
+}}"
 
 or
 
-"{
+"{{
 	"topic": "Cereal for dinner",
 	"sentiment": "-1.0"
-}"
+}}"
 
 
 
@@ -225,7 +225,16 @@ Normalize Scores: Scale the combined score to fit within the range of -1 to 1, w
 
 Assign a numerical sentiment rating between -1 and 1, with intervals for nuanced sentiment interpretation, using 0 as the most nuetral point anything negative of 0 being negative, and anything positive of 0 being positive. Example: -0.2 for slightly negative, -1 for extremely negative, 0.1 for slightly positive, 0.4 for mildly positive, 0.8 for very positive, etc. etc.
 
-"""
+'''
+    
+    response = ollama.chat(model='llama3', messages=[
+    {
+        'role': 'user',
+        'content': prompt,
+    },
+    ])
+
+    print(response)
 
 
 def main():
