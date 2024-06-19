@@ -70,6 +70,7 @@ def add_articles_to_db(cursor, con, articles):
         # check if article already in db
         res = cursor.execute("SELECT title FROM articles WHERE title=?", [title])
         test = res.fetchone()
+        print(test)
         if test is None:
             continue
 
@@ -139,12 +140,13 @@ def process_valid_articles(cursor):
     sql = """SELECT content
     FROM articles
     WHERE processed = 0"""
+    ts = datetime.datetime.now().strftime("%d-%m-%Y %H-%M-%S")
     result = cursor.execute(sql)
     article = result.fetchone()
     while article is not None:
-        sentiment_analysis(article)
+        sentiment_analysis(article, ts)
         
-def sentiment_analysis(content):
+def sentiment_analysis(content, timestamp):
     prompt = f'''
 I will feed you an article:
 
@@ -244,7 +246,7 @@ AGAIN, ONLY OUTPUT IN THE FOLLOWING FORMAT:
 
     print(response)
     x = response.get("message", {}).get("content") + "\n"
-    with open(f"testing_output/SA_{datetime.datetime.now().strftime("%d-%m-%Y %H-%M-%S")}", "w+", encoding="utf-8") as f:
+    with open(f"testing_output/SA_{timestamp}", "w+", encoding="utf-8") as f:
         f.write(x)
 
 
