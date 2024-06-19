@@ -101,6 +101,7 @@ Your job is to decide whether an article is about a culinary topic/produce/trend
 The articles classified as "yes" are directly related to culinary topics, which include:
 
 Food preparation and cooking techniques.
+Psychological or environmental factors influencing food or ingredient choices.
 Trends in food consumption and culinary innovations.
 Sales and popularity of specific produce.
 Cultural or social trends related to food.
@@ -109,7 +110,7 @@ Common Trend for "No" Responses:
 The articles classified as "no" are focused on topics adjacent to food but do not deal directly with culinary aspects such as:
 
 Business operations related to food retail.
-Psychological or environmental factors influencing food choices or packaging.
+Psychological or environmental factors influencing food packaging.
 Non-culinary aspects of the food industry.
 
 The ONLY response you should give is only one word PER ARTICLE: "YES" or "NO"
