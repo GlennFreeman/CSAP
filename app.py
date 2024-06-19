@@ -225,8 +225,15 @@ Normalize Scores: Scale the combined score to fit within the range of -1 to 1, w
 
 Assign a numerical sentiment rating between -1 and 1, with intervals for nuanced sentiment interpretation, using 0 as the most nuetral point anything negative of 0 being negative, and anything positive of 0 being positive. Example: -0.2 for slightly negative, -1 for extremely negative, 0.1 for slightly positive, 0.4 for mildly positive, 0.8 for very positive, etc. etc.
 
-'''
-    
+NO MORE THAN 75 CHARACTERS.
+
+AGAIN, ONLY OUTPUT IN THE FOLLOWING FORMAT:
+
+"{{
+	"topic": "Cereal for dinner",
+	"sentiment": "-1.0"
+}}"
+
     response = ollama.chat(model='llama3', messages=[
     {
         'role': 'user',
