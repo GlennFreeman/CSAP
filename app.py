@@ -133,6 +133,99 @@ The article is:
         return False
     else:
         return False
+    
+def process_valid_articles(cursor):
+    sql = """SELECT content
+    FROM articles
+    WHERE processed = 0"""
+    result = cursor.execute(sql)
+    article = result.fetchone()
+    while article is not None:
+        ...
+        
+def sentiment_analysis(content):
+    prompt = f"""
+I will feed you an article:
+
+{content}
+
+&
+
+You are an expert an analyzing articles and giving them a sentiment score from -1 to 1.
+Provide the topic and give a sentiment analysis value, Here are some examples: 
+
+Now output the analysis to a JSON format as the following example, ONLY output your response in the following form:
+
+"{
+	"topic": "Mushrooms as meat",
+	"sentiment": "0.33
+}"
+
+or
+
+"{
+	"topic": "Processed foods",
+	"sentiment": "-0.7"
+}"
+
+or
+
+"{
+	"topic": "Peruvian food",
+	"sentiment": "0.4"
+}"
+
+or
+
+"{
+	"topic": "McDonalds health",
+	"sentiment": "-0.4"
+}"
+
+or
+
+"{
+	"topic": "Soth American Seafood trends",
+	"sentiment": "0.9"
+}"
+
+or
+
+"{
+	"topic": "Curry Powder in TikTok Cooking",
+	"sentiment": "0.6"
+}"
+
+or
+
+"{
+	"topic": "Cereal for dinner",
+	"sentiment": "-1.0"
+}"
+
+
+
+
+The steps to do so are:
+
+Core Concept Assessment: Ensure the sentiment rating reflects attitudes towards the central theme of the article, disregarding tangential subjects. example: Focus on the idea of proccessed foods rather than regulations on proccessed foods.
+
+Then, while analyzing the article, Split the text into individual sentences exclude filler or unneccessary words like "the" and "or".
+
+Conceptual Focus: Direct analysis efforts towards sentiments associated with the core concept, excluding sentiments related to peripheral ideas.
+
+Calculate Sentence Scores: Determine the sentiment score for each sentence using the same process as word-level analysis.
+
+Weighted Average: Aggregate sentence scores, giving more weight to sentences with stronger emotional content or significance.
+
+Combine Word and Sentence Scores: Integrate word-level and sentence-level sentiment scores.
+
+Normalize Scores: Scale the combined score to fit within the range of -1 to 1, where -1 represents very negative sentiment, 0 indicates neutrality, and 1 reflects very positive sentiment.
+
+Assign a numerical sentiment rating between -1 and 1, with intervals for nuanced sentiment interpretation, using 0 as the most nuetral point anything negative of 0 being negative, and anything positive of 0 being positive. Example: -0.2 for slightly negative, -1 for extremely negative, 0.1 for slightly positive, 0.4 for mildly positive, 0.8 for very positive, etc. etc.
+
+"""
+
 
 def main():
     # load api key into env
@@ -143,7 +236,7 @@ def main():
     cur = con.cursor()
     validate_or_create_tables(cur)
 
-    articles = gnews_api_call(apikey=os.getenv("GNEWS_API_KEY"), countries=['us', 'ca'], pages=3)
+    articles = gnews_api_call(apikey=os.getenv("GNEWS_API_KEY"), countries=['us', 'ca'], pages=5)
     add_articles_to_db(cur, con, articles)
     print("done")
 
