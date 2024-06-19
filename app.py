@@ -155,7 +155,7 @@ I will feed you an article:
 You are an expert an analyzing articles and giving them a sentiment score from -1 to 1.
 Provide the topic and give a sentiment analysis value, Here are some examples: 
 
-Now output the analysis to a JSON format as the following example, ONLY output your response in the following form:
+Now output the analysis to a JSON format as the following example, No more than 75 characters. ONLY output your response in the following form:
 
 "{{
 	"topic": "Mushrooms as meat",
