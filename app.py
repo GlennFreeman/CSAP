@@ -265,16 +265,15 @@ I will feed you an article:
     },
     ])
 
-    x = response.get("message", {}).get("content") + "\n"
-    return process_response(x)
+    return process_response(response.get("message", {}).get("content"))
 
 def process_response(response):
-    with open("testing_output/response.txt", "a+", encoding="utf-8") as f:
+    with open("testing_output/response.txt", "w+", encoding="utf-8") as f:
         f.write(response)
     regex = re.compile(r'"topic.*?":.*?"(.+)",\s+.*?"sentiment.*?":.*?"(.+?)"')
-    match = regex.match(response)
-    topic = match.group(0)
-    score = match.group(1)
+    m = regex.search(response)
+    topic = m.group(0)
+    score = m.group(1)
     return (topic, score)
 
 def main():
