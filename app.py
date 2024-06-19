@@ -235,8 +235,9 @@ Assign a numerical sentiment rating between -1 and 1, with intervals for nuanced
     ])
 
     print(response)
+    x = response.get("message", {}).get("content") + "\n"
     with open(f"testing_output/SA_{datetime.datetime.now().strftime("%d-%m-%Y %H-%M-%S")}", "w+", encoding="utf-8") as f:
-        f.write(response.get("message", {}).get("content") + "\n")
+        f.write(x)
 
 
 def main():
