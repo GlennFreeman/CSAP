@@ -272,8 +272,10 @@ I will feed you an article:
     return process_response(response)
 
 def process_response(response):
+    with open("testing_output/response.txt", "w+", encoding="utf-8") as f:
+        f.write(response)
     regex = re.compile(r'"topic.*?":.*?"(.+)",\s+.*?"sentiment.*?":.*?"(.+?)"')
-    match = regex.match(response.get("content"))
+    match = regex.match(response)
     topic = match.group(0)
     score = match.group(1)
     return (topic, score)
