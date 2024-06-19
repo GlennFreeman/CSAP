@@ -69,7 +69,7 @@ def add_articles_to_db(cursor, con, articles):
         content = article[2]
 
         # check if article already in db
-        res = cursor.execute("SELECT title FROM articles WHERE title=?", title)
+        res = cursor.execute("SELECT title FROM articles WHERE title=?", [title]) # must be here or treats string like a list
         test = res.fetchone()
         print(test)
         if test is None:
