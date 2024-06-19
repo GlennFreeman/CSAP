@@ -248,6 +248,7 @@ def main():
 
     articles = gnews_api_call(apikey=os.getenv("GNEWS_API_KEY"), countries=['us', 'ca'], pages=5)
     add_articles_to_db(cur, con, articles)
+    process_valid_articles(cur)
     print("done")
 
 if __name__ == "__main__":
