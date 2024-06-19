@@ -121,7 +121,7 @@ The article is:
 
     response = ollama.chat(model='llama3', messages=[
     {
-        'role': 'assistant',
+        'role': 'user',
         'content': prompt,
     },
     ])
