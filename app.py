@@ -68,9 +68,9 @@ def add_articles_to_db(cursor, con, articles):
         content = article[2]
 
         # check if article already in db
-        res = cursor.execute("SELECT * FROM articles WHERE title=?", [title])
-        test = res.fetchall()
-        if test:
+        res = cursor.execute("SELECT title FROM articles WHERE title=?", [title])
+        test = res.fetchone()
+        if test is None:
             continue
 
         if not determine_if_article_relevant(article):
@@ -242,6 +242,8 @@ AGAIN, ONLY OUTPUT IN THE FOLLOWING FORMAT:
     ])
 
     print(response)
+    with open(f"testing_output/SA_{datetime.datetime.now().strftime("%d-%m-%Y %H-%M-%S")}", "w+", encoding="utf-8") as f:
+        f.write(response.get("message", {}).get("content") + "\n")
 
 
 def main():
