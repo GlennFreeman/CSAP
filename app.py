@@ -1,3 +1,4 @@
+import re
 import os
 import json
 import sqlite3
@@ -136,16 +137,37 @@ The article is:
     else:
         return False
     
-def process_valid_articles(cursor):
-    sql = """SELECT content
+def process_valid_articles(cursor, con):
+    sql = """SELECT title, content
     FROM articles
     WHERE processed = 0"""
     ts = datetime.datetime.now().strftime("%d-%m-%Y %H-%M-%S")
     result = cursor.execute(sql)
     article = result.fetchone()
     while article is not None:
-        sentiment_analysis(article, ts)
+        response = sentiment_analysis(article[1], ts)
+        sql2 = """
+INSERT INTO scores(lastChange, topic, score)
+VALUES(?, ?, ?)
+ON CONFLICT(topic) 
+DO UPDATE SET score = score + ?;
+"""
+        updateTS = f"{datetime.datetime.now()}"
+        data2 = (updateTS, response[0], response[1], response[1])
+        cursor.execute(sql2, data2)
         
+        sql3 = """
+UPDATE articles
+SET processed = 1
+WHERE title = ?
+"""
+        data3 = article[0]
+        cursor.execute(sql3, data3)
+        con.commit()
+
+
+
+
 def sentiment_analysis(content, timestamp):
     prompt = f'''
 I will feed you an article:
@@ -248,7 +270,14 @@ AGAIN, ONLY OUTPUT IN THE FOLLOWING FORMAT:
     x = response.get("message", {}).get("content") + "\n"
     with open(f"testing_output/SA_{timestamp}", "w+", encoding="utf-8") as f:
         f.write(x)
+    return process_response(response)
 
+def process_response(response):
+    regex = re.compile(r'"topic.*?":.*?"(.+)",\s+.*?"sentiment.*?":.*?"(.+?)"')
+    match = regex.match(response)
+    topic = match.group(0)
+    score = match.group(1)
+    return (topic, score)
 
 def main():
     # load api key into env
