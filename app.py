@@ -109,7 +109,7 @@ Common Trend for "No" Responses:
 The articles classified as "no" are focused on topics adjacent to food but do not deal directly with culinary aspects such as:
 
 Business operations related to food retail.
-Psychological or environmental factors influencing food choices or packaging.
+Psychological or environmental factors influencing food packaging.
 Non-culinary aspects of the food industry.
 
 The ONLY response you should give is only one word PER ARTICLE: "YES" or "NO"
