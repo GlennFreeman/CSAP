@@ -148,11 +148,6 @@ def process_valid_articles(cursor):
         
 def sentiment_analysis(content, timestamp):
     prompt = f'''
-I will feed you an article:
-
-{content}
-
-&
 
 You are an expert an analyzing articles and giving them a sentiment score from -1 to 1.
 Provide the topic and give a sentiment analysis value, Here are some examples: 
@@ -207,25 +202,22 @@ or
 }}"
 
 
+1) Core Concept Assessment: Focus on the central theme of the article, ignoring tangential subjects.
 
+2) Sentence Splitting: Break the text into individual sentences, excluding filler words.
 
-The steps to do so are:
+3) Conceptual Focus: Analyze sentiments related to the core concept, excluding peripheral ideas.
 
-Core Concept Assessment: Ensure the sentiment rating reflects attitudes towards the central theme of the article, disregarding tangential subjects. example: Focus on the idea of proccessed foods rather than regulations on proccessed foods.
+4) Calculate Sentence Scores: Determine sentiment scores for each sentence.
 
-Then, while analyzing the article, Split the text into individual sentences exclude filler or unneccessary words like "the" and "or".
+5) Weighted Average: Aggregate sentence scores, giving more weight to emotionally significant sentences.
 
-Conceptual Focus: Direct analysis efforts towards sentiments associated with the core concept, excluding sentiments related to peripheral ideas.
+6) Combine Scores: Integrate word-level and sentence-level sentiment scores.
 
-Calculate Sentence Scores: Determine the sentiment score for each sentence using the same process as word-level analysis.
+7) Normalize Scores: Scale the combined score to fit within the range of -1 to 1.
 
-Weighted Average: Aggregate sentence scores, giving more weight to sentences with stronger emotional content or significance.
+8) Assign Sentiment Rating: Assign a numerical sentiment rating between -1 and 1.
 
-Combine Word and Sentence Scores: Integrate word-level and sentence-level sentiment scores.
-
-Normalize Scores: Scale the combined score to fit within the range of -1 to 1, where -1 represents very negative sentiment, 0 indicates neutrality, and 1 reflects very positive sentiment.
-
-Assign a numerical sentiment rating between -1 and 1, with intervals for nuanced sentiment interpretation, using 0 as the most nuetral point anything negative of 0 being negative, and anything positive of 0 being positive. Example: -0.2 for slightly negative, -1 for extremely negative, 0.1 for slightly positive, 0.4 for mildly positive, 0.8 for very positive, etc. etc.
 
 NO MORE THAN 75 CHARACTERS.
 
@@ -235,6 +227,13 @@ AGAIN, ONLY OUTPUT IN THE FOLLOWING FORMAT:
 	"topic": "Cereal for dinner",
 	"sentiment": "-1.0"
 }}"
+
+&
+
+I will feed you an article:
+
+{content}
+
  '''
     
     response = ollama.chat(model='llama3', messages=[
