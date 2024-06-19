@@ -101,6 +101,7 @@ Your job is to decide whether an article is about a culinary topic/produce/trend
 The articles classified as "yes" are directly related to culinary topics, which include:
 
 Food preparation and cooking techniques.
+Psychological or environmental factors influencing food or ingredient choices.
 Trends in food consumption and culinary innovations.
 Sales and popularity of specific produce.
 Cultural or social trends related to food.
