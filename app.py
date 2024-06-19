@@ -50,7 +50,7 @@ def gnews_api_call(apikey, query = "food AND trend", lang = "en", countries = ["
 
             # TODO: check if articles are returned or if asked for page too high
             
-            with open(TIMESTAMP+" raw.txt", "a+", encoding="utf-8") as f:
+            with open("testing_output"+TIMESTAMP+" raw.txt", "a+", encoding="utf-8") as f:
                 f.write(json.dumps(response.json(), indent=4))
 
             data = json.loads(response.data)
@@ -126,6 +126,7 @@ The article is:
     },
     ])
 
+    print(response)
     if response.get("message", {}).get("content").lower() in ['yes', 'YES']:
         return True
     elif response.get("message", {}).get("content").lower() in ['no', 'NO']:
@@ -144,6 +145,7 @@ def main():
 
     articles = gnews_api_call(apikey=os.getenv("GNEWS_API_KEY"), countries=['us', 'ca'], pages=3)
     add_articles_to_db(cur, con, articles)
+    print("done")
 
 if __name__ == "__main__":
     main()
