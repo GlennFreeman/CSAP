@@ -1,4 +1,3 @@
-import re
 import os
 import json
 import sqlite3
@@ -138,31 +137,36 @@ The article is:
         return False
     
 def process_valid_articles(cursor, con):
-    sql = """SELECT title, content
+    sql = """
+    SELECT title, content
     FROM articles
     WHERE processed = 0"""
+    sql2 = """
+    INSERT INTO scores(lastChange, topic, score)
+    VALUES(?, ?, ?)
+    ON CONFLICT(topic) 
+    DO UPDATE SET score = score + ?;
+    """
+    sql3 = """
+    UPDATE articles
+    SET processed = 1
+    WHERE title = ?
+    """
     ts = datetime.datetime.now().strftime("%d-%m-%Y %H-%M-%S")
     result = cursor.execute(sql)
     article = result.fetchone()
     while article is not None:
         response = sentiment_analysis(article[1], ts)
-        sql2 = """
-INSERT INTO scores(lastChange, topic, score)
-VALUES(?, ?, ?)
-ON CONFLICT(topic) 
-DO UPDATE SET score = score + ?;
-"""
         updateTS = f"{datetime.datetime.now()}"
         data2 = (updateTS, response[0], response[1], response[1])
         cursor.execute(sql2, data2)
-        
-        sql3 = """
-UPDATE articles
-SET processed = 1
-WHERE title = ?
-"""
+
         data3 = article[0]
         cursor.execute(sql3, [data3]) # good ol cant give it a string
+
+        result = cursor.execute(sql)
+        article = result.fetchone()
+
         con.commit()
 
 
@@ -268,13 +272,11 @@ I will feed you an article:
     return process_response(response.get("message", {}).get("content"))
 
 def process_response(response):
-    with open("testing_output/response.txt", "w+", encoding="utf-8") as f:
-        f.write(response)
-    regex = re.compile(r'"topic.*?":.*?"(.+)",\s+.*?"sentiment.*?":.*?"(.+?)"')
-    m = regex.search(response)
-    topic = m.group(0)
-    score = m.group(1)
-    return (topic, score)
+    print(response)
+    r = json.loads(response)
+    topic = r["topic"]
+    score = r["sentiment"]
+    return (topic.lower(), score)
 
 def main():
     # load api key into env
