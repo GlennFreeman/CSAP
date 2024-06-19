@@ -265,14 +265,11 @@ I will feed you an article:
     },
     ])
 
-    print(response)
     x = response.get("message", {}).get("content") + "\n"
-    with open(f"testing_output/SA_{timestamp}", "w+", encoding="utf-8") as f:
-        f.write(x)
-    return process_response(response)
+    return process_response(x)
 
 def process_response(response):
-    with open("testing_output/response.txt", "w+", encoding="utf-8") as f:
+    with open("testing_output/response.txt", "a+", encoding="utf-8") as f:
         f.write(response)
     regex = re.compile(r'"topic.*?":.*?"(.+)",\s+.*?"sentiment.*?":.*?"(.+?)"')
     match = regex.match(response)
@@ -289,8 +286,8 @@ def main():
     cur = con.cursor()
     validate_or_create_tables(cur)
 
-    articles = gnews_api_call(apikey=os.getenv("GNEWS_API_KEY"), countries=['us', 'ca'], pages=5)
-    add_articles_to_db(cur, con, articles)
+    # TODO articles = gnews_api_call(apikey=os.getenv("GNEWS_API_KEY"), countries=['us', 'ca'], pages=5)
+    # TODO:add_articles_to_db(cur, con, articles)
     process_valid_articles(cur, con)
     print("done")
 
