@@ -50,8 +50,8 @@ def gnews_api_call(apikey, query = "food AND trend", lang = "en", countries = ["
 
             # TODO: check if articles are returned or if asked for page too high
             
-            with open("testing_output/"+TIMESTAMP+" raw.txt", "a+", encoding="utf-8") as f:
-                f.write(json.dumps(response.json(), indent=4))
+            # with open("testing_output/"+TIMESTAMP+" raw.txt", "a+", encoding="utf-8") as f:
+            #     f.write(json.dumps(response.json(), indent=4))
 
             data = json.loads(response.data)
             articlesRaw = data["articles"]
