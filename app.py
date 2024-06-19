@@ -69,7 +69,7 @@ def add_articles_to_db(cursor, con, articles):
         content = article[2]
 
         # check if article already in db
-        res = cursor.execute("SELECT title FROM articles WHERE title=?", [title])
+        res = cursor.execute("SELECT title FROM articles WHERE title=?", title)
         test = res.fetchone()
         print(test)
         if test is None:
@@ -273,7 +273,7 @@ I will feed you an article:
 
 def process_response(response):
     regex = re.compile(r'"topic.*?":.*?"(.+)",\s+.*?"sentiment.*?":.*?"(.+?)"')
-    match = regex.match(response)
+    match = regex.match(response.get("content"))
     topic = match.group(0)
     score = match.group(1)
     return (topic, score)
