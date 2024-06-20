@@ -37,7 +37,6 @@ def gnews_api_call(apikey, query = "food AND trend", lang = "en", countries = ["
 
     # Creating a PoolManager instance for sending requests.
     HTTP = urllib3.PoolManager()
-    TIMESTAMP = f"{datetime.datetime.now().strftime("%d-%m-%Y %H-%M-%S")}"
 
     articles = []
 
@@ -152,13 +151,13 @@ def process_valid_articles(cursor, con):
     SET processed = 1
     WHERE title = ?
     """
-    ts = datetime.datetime.now().strftime("%d-%m-%Y %H-%M-%S")
+
     result = cursor.execute(sql)
     article = result.fetchone()
     while article is not None:
         try:
             response = sentiment_analysis(article[1])
-        except: # skips the article
+        except: # skips the article  # noqa: E722
             data3 = article[0]
             cursor.execute(sql3, [data3]) # good ol cant give it a string
 
