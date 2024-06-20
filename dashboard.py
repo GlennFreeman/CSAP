@@ -19,18 +19,14 @@ topics = res.fetchall()
 
 dpg.create_context()
 
-
-
 with dpg.window(tag="Primary Window"):
     dpg.add_tab_bar(tag="tab bar")
-    dpg.add_tab(label="main", parent="tab bar")
-    dpg.add_text("Hello, world")
-    
-    buttons = []
-    longest = 0
-    for x in range(10):
-        label = stringify_tuple(topics[x])
-        buttons.append(dpg.add_button(label=label, user_data=topics[x], callback=button_callback))
+    with dpg.tab(label="main", parent="tab bar"):          
+            buttons = []
+            longest = 0
+            for x in range(10):
+                label = stringify_tuple(topics[x])
+                buttons.append(dpg.add_button(label=label, user_data=topics[x], callback=button_callback))
 
 dpg.create_viewport(title="CSAP")
 dpg.setup_dearpygui()
