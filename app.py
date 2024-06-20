@@ -135,6 +135,7 @@ The article is:
     else:
         return False
     
+    
 def process_valid_articles(cursor, con):
     sql = """
     SELECT title, content
@@ -175,8 +176,6 @@ def process_valid_articles(cursor, con):
             article = result.fetchone()
 
         con.commit()
-
-
 
 
 def sentiment_analysis(content):
