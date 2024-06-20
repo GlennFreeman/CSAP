@@ -30,8 +30,8 @@ with dpg.window(tag="Primary Window"):
                             dpg.add_table_column()
                             with dpg.table_row():
                                 with dpg.child_window(height=300):
-                                    ...
-                                    # dpg.plot()
+                                    # put in data plot based on topics
+                                    dpg.add_simple_plot(label="test", default_value=[-1,-5,1,5,10 ])
                             with dpg.table_row():
                                 with dpg.child_window():
                                     dpg.add_button(label="test")
