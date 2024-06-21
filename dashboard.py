@@ -1,6 +1,8 @@
 import sqlite3
 import dearpygui.dearpygui as dpg
 
+MAX_ITEMS = 50
+
 def button_callback(sender, app_data, user_data):
     dpg.add_tab(label=(user_data[0].title()), parent="tab bar", closable=True, tag=user_data[0])
     dpg.set_value("tab bar", user_data[0])
@@ -17,8 +19,6 @@ def show_info(title, message, selection_callback):
         with dpg.window(label=title, modal=True, no_close=True, show=False, tag="modal") as modal_id:
             dpg.add_text(message)
             dpg.add_button(label="Ok", width=75, user_data=(modal_id, True), callback=selection_callback)
-            dpg.add_same_line()
-            dpg.add_button(label="Cancel", width=75, user_data=(modal_id, False), callback=selection_callback)
 
 
     # guarantee these commands happen in another frame
@@ -26,6 +26,7 @@ def show_info(title, message, selection_callback):
     width = dpg.get_item_width(modal_id)
     height = dpg.get_item_height(modal_id)
     dpg.set_item_pos(modal_id, [viewport_width // 2 - width // 2, viewport_height // 2 - height // 2])
+
     # skips the frame where the modal shows up in the top left
     dpg.split_frame()
     dpg.configure_item(item="modal", show=True)
@@ -34,9 +35,7 @@ def show_info(title, message, selection_callback):
 def on_selection(sender, unused, user_data):
 
     if user_data[1]:
-        print("User selected 'Ok'")
-    else:
-        print("User selected 'Cancel'")
+        dpg.set_clipboard_text("testing")
 
     # delete window
     dpg.delete_item(user_data[0])
@@ -53,23 +52,28 @@ dpg.create_viewport(title="CSAP")
 
 with dpg.window(tag="Primary Window", no_scrollbar=True):
     with dpg.tab_bar(tag="tab bar", reorderable=True):
-        with dpg.tab(label="main", parent="tab bar", closable=False, order_mode=dpg.mvTabOrder_Leading):
+        with dpg.tab(label="Home", parent="tab bar", closable=False, order_mode=dpg.mvTabOrder_Leading):
             with dpg.group(horizontal=True):
                 with dpg.child_window(width=dpg.get_viewport_width()//2, height=dpg.get_viewport_height()-47):
                     dpg.add_input_text(hint="Enter propt to generate product idea")
                     with dpg.table(header_row=True):
-                        dpg.add_table_column(label="Topic")
+                        dpg.add_table_column(label="Topic", )
                         dpg.add_table_column(label="Score")
-                        for x in range(50):
+                        for x in range(MAX_ITEMS):
                             label = f'{x+1:>2}. {topics[x][0].title()}'
                             with dpg.table_row():
                                 dpg.add_selectable(label=label, user_data=topics[x], callback=button_callback, tag=f'tooltip{x}')
                                 with dpg.tooltip(parent=f'tooltip{x}'):
                                     dpg.add_text(topics[x][0].title())
                                 dpg.add_text(f"{topics[x][1]:>5.2f}")
-                with dpg.group():
+                with dpg.child_window():
                     # put in data plot based on topics
-                    dpg.add_simple_plot(label="test", default_value=[-1,-5,1,5,10 ])
+                    with dpg.plot(label="bar graph", width=dpg.get_viewport_width()//2-70):
+                        dpg.add_plot_axis(dpg.mvXAxis)
+                        dpg.set_axis_ticks(dpg.last_item(), (("S1", 11), ("S2", 21), ("S3", 31)))
+                        dpg.add_plot_axis(dpg.mvYAxis, label="SCORE", tag="y_axis")
+                        # for x in range(MAX_ITEMS):
+                        dpg.add_bar_series(list(range(0, MAX_ITEMS*2, 2)), [topic[1] for topic in topics], parent="y_axis")
                     dpg.add_button(label="Open Messagebox", callback=lambda:show_info("Message Box", "Do you wish to proceed?", on_selection))
 
 
