@@ -1,4 +1,5 @@
 import sqlite3
+from turtle import width
 import dearpygui.dearpygui as dpg
 
 MAX_ITEMS = 50
@@ -71,12 +72,14 @@ with dpg.window(tag="Primary Window", no_scrollbar=True):
                     with dpg.plot(label="Topic Visualizer", width=dpg.get_viewport_width()//2-70):
                         dpg.add_plot_axis(dpg.mvXAxis)
                         ticks = []
-                        for x in range(1,11):
-                            ticks.append((x, x*10))
-                        dpg.set_axis_ticks(dpg.last_item(), ticks)
+                        # for x in range(1,11):
+                        #     ticks.append((x, x*10))
+                        # dpg.set_axis_ticks(dpg.last_item(), ticks)
                         dpg.add_plot_axis(dpg.mvYAxis, label="SCORE", tag="y_axis")
-                        # for x in range(MAX_ITEMS):
-                        dpg.add_bar_series(list(range(5, MAX_ITEMS*5+5, 5)), [topic[1] for topic in topics], parent="y_axis")
+                        dpg.add_plot_legend()
+                        for x in range(10):
+                            width = 5*topics[x][1]  # noqa: F811
+                            dpg.add_bar_series(x=list([x*10]), y=list([topics[x][1]]), weight=width, parent="y_axis")
                     dpg.add_button(label="Open Messagebox", callback=lambda:show_info("Message Box", "Do you wish to proceed?", on_selection))
 
 
