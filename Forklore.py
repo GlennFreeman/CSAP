@@ -49,7 +49,7 @@ res = cur.execute(sql)
 topics = res.fetchall()
 
 dpg.create_context()
-dpg.create_viewport(title="CSAP")
+dpg.create_viewport(title="Forklore")
 
 with dpg.window(tag="Primary Window", no_scrollbar=True):
     with dpg.tab_bar(tag="tab bar", reorderable=True):
@@ -69,17 +69,14 @@ with dpg.window(tag="Primary Window", no_scrollbar=True):
                                 dpg.add_text(f"{topics[x][1]:>5.2f}")
                 with dpg.child_window():
                     # put in data plot based on topics
-                    with dpg.plot(label="Topic Visualizer", width=dpg.get_viewport_width()//2-70):
+                    with dpg.plot(label="Topic Visualizer", width=dpg.get_viewport_width()//2-70, height=dpg.get_viewport_height()//2, tag="plot"):
                         dpg.add_plot_axis(dpg.mvXAxis)
-                        ticks = []
-                        # for x in range(1,11):
-                        #     ticks.append((x, x*10))
-                        # dpg.set_axis_ticks(dpg.last_item(), ticks)
                         dpg.add_plot_axis(dpg.mvYAxis, label="SCORE", tag="y_axis")
-                        dpg.add_plot_legend()
+                        dpg.add_plot_legend(parent="plot")
                         for x in range(10):
                             width = 5*topics[x][1]  # noqa: F811
-                            dpg.add_bar_series(x=list([x*10]), y=list([topics[x][1]]), weight=width, parent="y_axis")
+                            dpg.add_bar_series(x=list([x*10]), y=list([topics[x][1]]), label=str(topics[x][0]).title(), weight=width, parent="y_axis", tag=f"bar{x}")
+                            # dpg.add_button(parent=dpg.last_item(), label=topics[x][0]) # TODO: MAKE IT A LEGEND
                     dpg.add_button(label="Open Messagebox", callback=lambda:show_info("Message Box", "Do you wish to proceed?", on_selection))
 
 
