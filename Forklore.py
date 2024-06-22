@@ -81,6 +81,7 @@ with dpg.window(tag="Primary Window", no_scrollbar=True):
 
 
 
+dpg.show_style_editor()
 dpg.setup_dearpygui()
 dpg.show_viewport()
 dpg.set_primary_window("Primary Window", True)
