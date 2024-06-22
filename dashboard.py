@@ -68,12 +68,15 @@ with dpg.window(tag="Primary Window", no_scrollbar=True):
                                 dpg.add_text(f"{topics[x][1]:>5.2f}")
                 with dpg.child_window():
                     # put in data plot based on topics
-                    with dpg.plot(label="bar graph", width=dpg.get_viewport_width()//2-70):
+                    with dpg.plot(label="Topic Visualizer", width=dpg.get_viewport_width()//2-70):
                         dpg.add_plot_axis(dpg.mvXAxis)
-                        dpg.set_axis_ticks(dpg.last_item(), (("S1", 11), ("S2", 21), ("S3", 31)))
+                        ticks = []
+                        for x in range(1,11):
+                            ticks.append((x, x*10))
+                        dpg.set_axis_ticks(dpg.last_item(), ticks)
                         dpg.add_plot_axis(dpg.mvYAxis, label="SCORE", tag="y_axis")
                         # for x in range(MAX_ITEMS):
-                        dpg.add_bar_series(list(range(0, MAX_ITEMS*2, 2)), [topic[1] for topic in topics], parent="y_axis")
+                        dpg.add_bar_series(list(range(5, MAX_ITEMS*5+5, 5)), [topic[1] for topic in topics], parent="y_axis")
                     dpg.add_button(label="Open Messagebox", callback=lambda:show_info("Message Box", "Do you wish to proceed?", on_selection))
 
 
