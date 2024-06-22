@@ -73,10 +73,12 @@ with dpg.window(tag="Primary Window", no_scrollbar=True):
                         dpg.add_plot_axis(dpg.mvXAxis, tag="x axis")
                         dpg.add_plot_axis(dpg.mvYAxis, label="SCORE", tag="y axis")
                         dpg.set_axis_limits(axis="y axis", ymin=-1, ymax=9)
+                        dpg.set_axis_limits(axis="x axis", ymin=0, ymax=100)
+                        dpg.set_axis_ticks(axis="x axis", label_pairs=("",0))
                         dpg.add_plot_legend(parent="plot")
                         for x in range(10):
                             width = 5*topics[x][1]  # noqa: F811
-                            dpg.add_bar_series(x=list([x*10]), y=list([topics[x][1]]), label=str(topics[x][0]).title(), weight=width, parent="y axis", tag=f"bar{x}")
+                            dpg.add_bar_series(x=list([x*10+5]), y=list([topics[x][1]]), label=str(topics[x][0]).title(), weight=width, parent="y axis", tag=f"bar{x}")
                             # dpg.add_button(parent=dpg.last_item(), label=topics[x][0]) # TODO: MAKE IT A LEGEND
                     dpg.add_button(label="Open Messagebox", callback=lambda:show_info("Message Box", "Do you wish to proceed?", on_selection))
 
