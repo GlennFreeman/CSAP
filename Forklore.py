@@ -49,13 +49,13 @@ res = cur.execute(sql)
 topics = res.fetchall()
 
 dpg.create_context()
-dpg.create_viewport(title="Forklore")
+dpg.create_viewport(title="Forklore", small_icon="icon.ico", large_icon="icon.ico")
 
 with dpg.window(tag="Primary Window", no_scrollbar=True):
     with dpg.tab_bar(tag="tab bar", reorderable=True):
         with dpg.tab(label="Home", parent="tab bar", closable=False, order_mode=dpg.mvTabOrder_Leading):
             with dpg.group(horizontal=True):
-                with dpg.child_window(width=dpg.get_viewport_width()//2, height=dpg.get_viewport_height()-47):
+                with dpg.child_window(width=dpg.get_viewport_width()//2, height=dpg.get_viewport_client_height()-47):
                     dpg.add_input_text(hint="Enter propt to generate product idea")
                     with dpg.table(header_row=True):
                         dpg.add_table_column(label="Topic", )
@@ -70,12 +70,13 @@ with dpg.window(tag="Primary Window", no_scrollbar=True):
                 with dpg.child_window():
                     # put in data plot based on topics
                     with dpg.plot(label="Topic Visualizer", width=dpg.get_viewport_width()//2-70, height=dpg.get_viewport_height()//2, tag="plot"):
-                        dpg.add_plot_axis(dpg.mvXAxis)
-                        dpg.add_plot_axis(dpg.mvYAxis, label="SCORE", tag="y_axis")
+                        dpg.add_plot_axis(dpg.mvXAxis, tag="x axis")
+                        dpg.add_plot_axis(dpg.mvYAxis, label="SCORE", tag="y axis")
+                        dpg.set_axis_limits(axis="y axis", ymin=-1, ymax=9)
                         dpg.add_plot_legend(parent="plot")
                         for x in range(10):
                             width = 5*topics[x][1]  # noqa: F811
-                            dpg.add_bar_series(x=list([x*10]), y=list([topics[x][1]]), label=str(topics[x][0]).title(), weight=width, parent="y_axis", tag=f"bar{x}")
+                            dpg.add_bar_series(x=list([x*10]), y=list([topics[x][1]]), label=str(topics[x][0]).title(), weight=width, parent="y axis", tag=f"bar{x}")
                             # dpg.add_button(parent=dpg.last_item(), label=topics[x][0]) # TODO: MAKE IT A LEGEND
                     dpg.add_button(label="Open Messagebox", callback=lambda:show_info("Message Box", "Do you wish to proceed?", on_selection))
 
